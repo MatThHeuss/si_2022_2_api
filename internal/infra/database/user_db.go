@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"github.com/MatThHeuss/si_2020_2_api/internal/dto"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
 	"log"
 )
@@ -34,15 +35,15 @@ func (u *User) Create(user *entity.User) error {
 	return nil
 }
 
-func (u *User) FindByEmail(email string) (*entity.User, error) {
-	stmt, err := u.DB.Prepare("select * from users where email = ?")
+func (u *User) FindByEmail(email string) (*dto.CreateUserOutput, error) {
+	stmt, err := u.DB.Prepare("select id, name, email, profile_image_url, created_at from users where email = ?")
 	if err != nil {
 		log.Printf("Error in prepare statement: %s", err)
 		return nil, err
 	}
 	defer stmt.Close()
 
-	var user entity.User
+	var user dto.CreateUserOutput
 	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.ProfileImageURL, &user.CreatedAt)
 	if err != nil {
 		log.Printf("Error in Scan: %s", err)

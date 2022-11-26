@@ -1,4 +1,4 @@
-cmd/server/.env
+.env
 .idea
 si-backend.json
 application_default_credentials.json

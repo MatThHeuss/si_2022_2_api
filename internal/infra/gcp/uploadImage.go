@@ -24,12 +24,6 @@ func UploadFile(object string, file multipart.File) error {
 	o := client.Bucket("si_images_unb").Object(object)
 	o = o.If(storage.Conditions{DoesNotExist: true})
 
-	attrs, err := o.Attrs(ctx)
-	if err != nil {
-		return fmt.Errorf("object.Attrs: %v", err)
-	}
-	o = o.If(storage.Conditions{GenerationMatch: attrs.Generation})
-
 	wc := o.NewWriter(ctx)
 
 	if _, err = io.Copy(wc, file); err != nil {

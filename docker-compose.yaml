@@ -15,12 +15,20 @@ services:
     container_name: db-mysql
     restart: always
     env_file:
-      - cmd/server/.env
+      - .env
+    networks:
+      - mysql-net
     ports:
       - '3306:3306'
     expose:
       - '3306'
     volumes:
       - my-db:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d/
+
+networks:
+  mysql-net:
+    driver:  bridge
+
 volumes:
   my-db:
