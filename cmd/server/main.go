@@ -27,6 +27,13 @@ func main() {
 		panic(err)
 	}
 
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+	log.Println("successfully connected to the database.")
+	defer db.Close()
+
 	userDb := database.NewUserDb(db)
 	announcementDb := database.NewAnnouncementDb(db)
 	announcementImageDb := database.NewAnnouncementImagesDb(db)
@@ -53,6 +60,7 @@ func MysqlConnectString() string {
 		log.Fatal(err)
 		panic(err)
 	}
+
 	cfg := mysql.Config{
 		User:                 configs.MysqlUser,     // Username
 		Passwd:               configs.MysqlPassword, // Password (requires User)
