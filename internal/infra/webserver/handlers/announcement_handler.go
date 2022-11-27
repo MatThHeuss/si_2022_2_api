@@ -7,6 +7,7 @@ import (
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/database"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/gcp"
 	pkg "github.com/MatThHeuss/si_2020_2_api/pkg/entity"
+	"github.com/go-chi/chi"
 	"log"
 	"net/http"
 	"strings"
@@ -43,7 +44,7 @@ func (h *AnnouncementHandler) CreateAnnouncement(w http.ResponseWriter, r *http.
 	err = h.AnnouncementDb.Create(announcement)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Printf("error inserting in announcement table: %s", err)
+		log.Printf("error inserting in announcement table: %s", err)
 		return
 	}
 
@@ -51,26 +52,26 @@ func (h *AnnouncementHandler) CreateAnnouncement(w http.ResponseWriter, r *http.
 		file, fileHeader, err := r.FormFile(k)
 		fileName := strings.ReplaceAll(fileHeader.Filename, " ", "_")
 		if err != nil {
-			fmt.Println("inovke FormFile error:", err)
+			log.Printf("inovke FormFile error: %s", err)
 			return
 		}
 		defer file.Close()
 		err = gcp.UploadFile(fileName, file)
 		if err != nil {
-			log.Println(err)
+			log.Printf("Error uploading file: %s", err)
 		}
 
 		photoUrl = fmt.Sprintf("https://storage.googleapis.com/si_images_unb/%s", fileName)
 		announcementImage, err := entity.NewAnnouncementImage(announcement.ID.String(), photoUrl)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Printf("error creating new announcement image entity: %s", err)
+			log.Printf("error creating new announcement image entity: %s", err)
 			return
 		}
 		err = h.AnnouncementImageDb.Create(announcementImage)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Printf("error inserting in announcement image table: %s", err)
+			log.Printf("error inserting in announcement image table: %s", err)
 			return
 		}
 	}
@@ -83,7 +84,29 @@ func (h *AnnouncementHandler) GetAllAnnouncements(w http.ResponseWriter, r *http
 	announcements, err := h.AnnouncementDb.GetAllAnnouncements()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Printf("error loading all announcements: %s", err)
+		log.Printf("error loading all announcements: %s", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(announcements)
+}
+
+func (h *AnnouncementHandler) GetAnnouncementById(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	id := chi.URLParam(r, "id")
+	announcements, err := h.AnnouncementDb.GetAnnouncementById(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err)
+		log.Printf("error loading  announcement: %s", err)
+		return
+	}
+
+	if announcements == nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode("announcement not found")
 		return
 	}
 

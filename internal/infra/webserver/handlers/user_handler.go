@@ -61,14 +61,14 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	file, fileHeader, err := r.FormFile("profile_image")
 	fileName := strings.ReplaceAll(fileHeader.Filename, " ", "_")
 	if err != nil {
-		fmt.Println("inovke FormFile error:", err)
+		log.Printf("inovke FormFile error: %s", err)
 		return
 	}
 
 	defer file.Close()
 	err = gcp.UploadFile(fileName, file)
 	if err != nil {
-		log.Println(err)
+		log.Printf("Error uploading file: %s", err)
 	}
 
 	photoUrl := fmt.Sprintf("https://storage.googleapis.com/si_images_unb/%s", fileName)

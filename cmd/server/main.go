@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/MatThHeuss/si_2020_2_api/configs"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/database"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/webserver/handlers"
@@ -40,7 +41,9 @@ func main() {
 	r.Get("/users", userHandler.FindByEmail)
 	r.Post("/announcements", announcementHandler.CreateAnnouncement)
 	r.Get("/announcements", announcementHandler.GetAllAnnouncements)
+	r.Get("/announcements/{id}", announcementHandler.GetAnnouncementById)
 
+	fmt.Printf("Starting Server at port: %s", configs.WebServerPort)
 	http.ListenAndServe(configs.WebServerPort, r)
 }
 
