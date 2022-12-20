@@ -55,7 +55,7 @@ func (h *AnnouncementHandler) CreateAnnouncement(w http.ResponseWriter, r *http.
 			log.Printf("inovke FormFile error: %s", err)
 			return
 		}
-		defer file.Close()
+
 		err = gcp.UploadFile(fileName, file)
 		if err != nil {
 			log.Printf("Error uploading file: %s", err)

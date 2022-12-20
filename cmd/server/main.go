@@ -31,6 +31,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	log.Println("successfully connected to the database.")
 	defer db.Close()
 
@@ -50,7 +51,7 @@ func main() {
 	r.Get("/announcements", announcementHandler.GetAllAnnouncements)
 	r.Get("/announcements/{id}", announcementHandler.GetAnnouncementById)
 
-	fmt.Printf("Starting Server at port: %s", configs.WebServerPort)
+	fmt.Printf("Starting Server at port: %s\n", configs.WebServerPort)
 	http.ListenAndServe(configs.WebServerPort, r)
 }
 
@@ -70,7 +71,7 @@ func MysqlConnectString() string {
 		Collation:            "utf8mb4_general_ci",  // Connection collation
 		AllowNativePasswords: true,
 		CheckConnLiveness:    true,
-		Timeout:              time.Second * 5,
+		Timeout:              time.Second * 10,
 		Loc:                  time.Local,
 		ParseTime:            true,
 	}
