@@ -10,6 +10,8 @@ services:
       - "8080:8080"
     env_file:
       - .env
+    volumes:
+      - ./si_2022_2_api:/app
     depends_on:
       - db
   db:
