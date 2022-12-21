@@ -10,6 +10,7 @@ FROM alpine:3.16
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY .env .
+COPY application_default_credentials.json .
 COPY wait-for.sh .
 RUN ["chmod", "+x", "/app/wait-for.sh"]
 
