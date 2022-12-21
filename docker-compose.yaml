@@ -1,37 +1,26 @@
-version: '3.3'
+version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: api
+    build: .
     ports:
       - "8080:8080"
     env_file:
       - .env
+    command: sh -c '/app/wait-for.sh db:3306 -t 60 -- /app/main'
     depends_on:
       - db
-    command: ["/app/main"]
+
   db:
     image: mysql:5.7
-    container_name: db-mysql
     restart: always
     env_file:
       - .env
-    networks:
-      - mysql-net
     ports:
       - "3306:3306"
-    expose:
-      - 3306
     volumes:
       - my-db:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d/
-
-networks:
-  mysql-net:
-    driver:  bridge
 
 volumes:
   my-db:
