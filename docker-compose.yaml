@@ -10,10 +10,9 @@ services:
       - "8080:8080"
     env_file:
       - .env
-    volumes:
-      - ./si_2022_2_api:/app
     depends_on:
       - db
+    command: ["/app/main"]
   db:
     image: mysql:5.7
     container_name: db-mysql

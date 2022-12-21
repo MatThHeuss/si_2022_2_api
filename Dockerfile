@@ -1,15 +1,15 @@
-FROM golang:1.18-alpine
-
-LABEL maintainer="matheus alencar"
-
+# Build stage
+FROM golang:1.19-alpine3.16 AS builder
 WORKDIR /app
-
-COPY go.mod go.sum ./
-
-RUN go mod download
-
 COPY . .
+RUN go build -o main cmd/server/main.go
+
+# Run stage
+FROM alpine:3.16
+WORKDIR /app
+COPY --from=builder /app/main .
+COPY .env .
+
 
 EXPOSE 8080
-
-ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+CMD [ "/app/main" ]
