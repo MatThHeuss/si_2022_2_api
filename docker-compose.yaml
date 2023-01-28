@@ -7,7 +7,7 @@ services:
       - "8080:8080"
     env_file:
       - .env
-    command: sh -c '/app/wait-for.sh db:3306 -t 60 -- /app/main'
+    command: sh -c '/app/wait-for.sh db:3306 -t 120 -- /app/main'
     depends_on:
       - db
 

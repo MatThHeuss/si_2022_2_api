@@ -38,8 +38,11 @@ func main() {
 	userDb := database.NewUserDb(db)
 	announcementDb := database.NewAnnouncementDb(db)
 	announcementImageDb := database.NewAnnouncementImagesDb(db)
+	chatDb := database.NewChatDb(db)
+
 	announcementHandler := handlers.NewAnnouncementHandler(announcementDb, announcementImageDb)
 	userHandler := handlers.NewUserHandler(userDb)
+	chatHandler := handlers.NewChatHandler(chatDb)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -50,6 +53,8 @@ func main() {
 	r.Post("/announcements", announcementHandler.CreateAnnouncement)
 	r.Get("/announcements", announcementHandler.GetAllAnnouncements)
 	r.Get("/announcements/{id}", announcementHandler.GetAnnouncementById)
+	r.Post("/chat", chatHandler.Create)
+	r.Get("/chat", chatHandler.GetAllMessage)
 
 	fmt.Printf("Starting Server at port: %s\n", configs.WebServerPort)
 	http.ListenAndServe(configs.WebServerPort, r)

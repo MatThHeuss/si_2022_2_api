@@ -23,5 +23,14 @@ create table if not EXISTS announcement (
     user_id varchar(255) not null
 );
 
+
+create table if not Exists chat (
+    id varchar(255) primary key not null,
+    sender varchar(255) not null,
+    receiver varchar(255) not null,
+    content varchar(255) not null,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 ALTER TABLE announcement_images ADD FOREIGN KEY (announcement_id) REFERENCES announcement (id);
 ALTER TABLE announcement ADD FOREIGN KEY (user_id) REFERENCES users(id);

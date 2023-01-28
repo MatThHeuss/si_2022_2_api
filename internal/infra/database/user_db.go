@@ -16,6 +16,7 @@ func NewUserDb(db *sql.DB) *User {
 }
 
 func (u *User) Create(user *entity.User) error {
+
 	stmt, err := u.DB.Prepare("insert into users (id, name, profile_image_url, email, password) values (?, ?, ?, ?, ?)")
 
 	if err != nil {

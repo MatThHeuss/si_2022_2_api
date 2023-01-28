@@ -70,32 +70,23 @@ func (a *Announcement) GetAllAnnouncements() (*[]dto.GetAllAnnouncementsOutputTo
 }
 
 func (a *Announcement) GetAnnouncementById(id string) (*dto.GetAllAnnouncementsOutputToUser, error) {
-	rows, err := a.DB.Query(" select\n  a.id,\n  a.name,\n  a.description,\n  a.address,\n  a.postal_code,\n  u.name,\n  group_concat(image_url) as \"images\"\nfrom\n  users u,\n  announcement a,\n  announcement_images\nWHERE\n  a.user_id = u.id\n  AND a.id = announcement_images.announcement_id\n  AND a.id = ?  \n  GROUP BY\n  a.id,\n  a.name,  \n  a.description,\n  a.address,\n  a.postal_code,\n  u.name;", id)
-	if err != nil {
+
+	query := " select a.id, a.name, a.description,  a.address,  a.postal_code,  u.name,  group_concat(image_url) as \"images\"\nfrom\n  users u,\n  announcement a,\n  announcement_images\nWHERE\n  a.user_id = u.id\n  AND a.id = announcement_images.announcement_id\n  AND a.id = ?  \n  GROUP BY\n  a.id,\n  a.name,  \n  a.description,\n  a.address,\n  a.postal_code,\n  u.name;"
+
+	var announcementsOutput dto.GetAllAnnouncementsOutput
+	if err := a.DB.QueryRow(query, id).Scan(&announcementsOutput.ID, &announcementsOutput.Name, &announcementsOutput.Description, &announcementsOutput.Address, &announcementsOutput.PostalCode, &announcementsOutput.User, &announcementsOutput.Images); err != nil {
 		log.Printf("Error executing query: %s", err)
+
 	}
 
-	defer rows.Close()
 	var announcementsOutputUser dto.GetAllAnnouncementsOutputToUser
 
-	if !rows.Next() {
-		return nil, nil
-	}
-
-	for rows.Next() {
-		var announcementsOutput dto.GetAllAnnouncementsOutput
-
-		err = rows.Scan(&announcementsOutput.ID, &announcementsOutput.Name, &announcementsOutput.Description, &announcementsOutput.Address, &announcementsOutput.PostalCode, &announcementsOutput.User, &announcementsOutput.Images)
-
-		announcementsOutputUser.ID = announcementsOutput.ID
-		announcementsOutputUser.User = announcementsOutput.User
-		announcementsOutputUser.Description = announcementsOutput.Description
-		announcementsOutputUser.PostalCode = announcementsOutput.PostalCode
-		announcementsOutputUser.Name = announcementsOutput.Name
-		announcementsOutputUser.Address = announcementsOutput.Address
-		announcementsOutputUser.Images = append(announcementsOutputUser.Images, strings.Split(announcementsOutput.Images, ",")...)
-
-	}
-
+	announcementsOutputUser.ID = announcementsOutput.ID
+	announcementsOutputUser.User = announcementsOutput.User
+	announcementsOutputUser.Description = announcementsOutput.Description
+	announcementsOutputUser.PostalCode = announcementsOutput.PostalCode
+	announcementsOutputUser.Name = announcementsOutput.Name
+	announcementsOutputUser.Address = announcementsOutput.Address
+	announcementsOutputUser.Images = append(announcementsOutputUser.Images, strings.Split(announcementsOutput.Images, ",")...)
 	return &announcementsOutputUser, nil
 }

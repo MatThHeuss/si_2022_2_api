@@ -23,3 +23,8 @@ type AnnouncementInterface interface {
 type AnnouncementImagesInterface interface {
 	Create(user *entity.AnnouncementImage) error
 }
+
+type ChatInterface interface {
+	Create(chat *entity.Chat) error
+	GetAllMessages(senderId, receiverId string) (*[]entity.Chat, error)
+}

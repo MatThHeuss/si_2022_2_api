@@ -38,3 +38,14 @@ type GetAllAnnouncementsOutputToUser struct {
 	User        string   `json:"user"`
 	Images      []string `json:"images"`
 }
+
+type CreateChatInput struct {
+	SenderID   string `json:"sender_id"`
+	ReceiverID string `json:"receiver_id"`
+	Content    string `json:"content"`
+}
+
+type GetAllMessagesInput struct {
+	SenderID   string `json:"sender_id"`
+	ReceiverID string `json:"receiver_id"`
+}
