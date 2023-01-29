@@ -1,0 +1,246 @@
+{
+	"info": {
+		"_postman_id": "f27fe699-b3b9-4539-9770-1e710ecac00f",
+		"name": "SI-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "teste 1",
+							"type": "default"
+						},
+						{
+							"key": "email",
+							"value": "teste1@email.com",
+							"type": "default"
+						},
+						{
+							"key": "password",
+							"value": "12345",
+							"type": "default"
+						},
+						{
+							"key": "profile_image",
+							"type": "file",
+							"src": "/home/matheus/Downloads/gopher2.png"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar anuncio",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "teste 2",
+							"type": "default"
+						},
+						{
+							"key": "description",
+							"value": "teste 2 ",
+							"type": "default"
+						},
+						{
+							"key": "address",
+							"value": "teste rua 2 ",
+							"type": "default"
+						},
+						{
+							"key": "postal_code",
+							"value": "333322233",
+							"type": "default"
+						},
+						{
+							"key": "user_id",
+							"value": "e6208774-ecf3-4355-bb5c-434b4ce4f446",
+							"type": "default"
+						},
+						{
+							"key": "image_1",
+							"type": "file",
+							"src": "/home/matheus/Downloads/IMG_20221231_195857.jpg"
+						},
+						{
+							"key": "image_2",
+							"type": "file",
+							"src": "/home/matheus/Downloads/geek_dsa.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/announcements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"announcements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar todos os anuncios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/announcements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"announcements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar um anuncio por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/announcements/59d475f8-ad1c-4b70-9a0e-d524b8019a4d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"announcements",
+						"59d475f8-ad1c-4b70-9a0e-d524b8019a4d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar um usuário",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"teste2@email.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Chat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"sender_id\":\"0218e338-ea62-4b50-a15c-6ed4c1a0b0ae\",\n    \"receiver_id\":\"e6208774-ecf3-4355-bb5c-434b4ce4f446\",\n    \"content\":\"Tudo bom?\"\n}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/chat",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"chat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all messages",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {   \"sender_id\":\" 0218e338-ea62-4b50-a15c-6ed4c1a0b0ae\",\n    \"receiver_id\":\"e6208774-ecf3-4355-bb5c-434b4ce4f446\"\n }\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/chat",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"chat"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
