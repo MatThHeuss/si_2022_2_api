@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
 	"log"
 )
@@ -42,6 +43,11 @@ func (u *Chat) GetAllMessages(sender, receiver string) (*[]entity.Chat, error) {
 	if err != nil {
 		log.Printf("Error im exec query: %s", err)
 		return nil, err
+	}
+
+	if !rows.Next() {
+		log.Printf("Error im exec query: %s", err)
+		return nil, errors.New("no message found")
 	}
 
 	defer rows.Close()

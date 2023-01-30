@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
+	"github.com/MatThHeuss/si_2020_2_api/internal/errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/database"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/gcp"
 	pkg "github.com/MatThHeuss/si_2020_2_api/pkg/entity"
@@ -83,8 +84,13 @@ func (h *AnnouncementHandler) GetAllAnnouncements(w http.ResponseWriter, r *http
 	w.Header().Set("Content-Type", "application/json")
 	announcements, err := h.AnnouncementDb.GetAllAnnouncements()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		err := errors.Errors{
+			Message:    "No one announcement found",
+			StatusCode: http.StatusNotFound,
+		}
+		w.WriteHeader(http.StatusNotFound)
 		log.Printf("error loading all announcements: %s", err)
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 
@@ -98,7 +104,11 @@ func (h *AnnouncementHandler) GetAnnouncementById(w http.ResponseWriter, r *http
 	announcements, err := h.AnnouncementDb.GetAnnouncementById(id)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
+		err := &errors.Errors{
+			Message:    "announcement not found",
+			StatusCode: http.StatusNotFound,
+		}
 		json.NewEncoder(w).Encode(err)
 		log.Printf("error loading  announcement: %s", err)
 		return

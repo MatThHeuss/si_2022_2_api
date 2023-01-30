@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/MatThHeuss/si_2020_2_api/internal/dto"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
+	"github.com/MatThHeuss/si_2020_2_api/internal/errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/database"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/gcp"
 	"log"
@@ -32,9 +33,13 @@ func (h *UserHandler) FindByEmail(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.UserDb.FindByEmail(userdto.Email)
 	if err != nil {
+		err := errors.Errors{
+			Message:    "User not found",
+			StatusCode: http.StatusNotFound,
+		}
 		log.Printf("User not found: %s", err)
 		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode("User not found")
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/MatThHeuss/si_2020_2_api/internal/dto"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
+	"github.com/MatThHeuss/si_2020_2_api/internal/errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/database"
 	"log"
 	"net/http"
@@ -24,12 +25,15 @@ func (h *ChatHandler) Create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+		json.NewEncoder(w).Encode(err.Error())
 	}
 	c := entity.NewMessage(createChatDto.SenderID, createChatDto.ReceiverID, createChatDto.Content)
 
 	err = h.ChatDb.Create(c)
 	if err != nil {
+		log.Println(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
 		return
 	}
 
@@ -42,17 +46,20 @@ func (h *ChatHandler) GetAllMessage(w http.ResponseWriter, r *http.Request) {
 	var getAllMessagesDto dto.GetAllMessagesInput
 	err := json.NewDecoder(r.Body).Decode(&getAllMessagesDto)
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+		json.NewEncoder(w).Encode(err.Error())
 	}
 
 	chats, err := h.ChatDb.GetAllMessages(getAllMessagesDto.SenderID, getAllMessagesDto.ReceiverID)
 
 	if err != nil {
-		log.Println(err)
+		err := errors.Errors{
+			Message:    err.Error(),
+			StatusCode: http.StatusNotFound,
+		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(err)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

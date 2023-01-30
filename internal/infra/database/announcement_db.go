@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/dto"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
 	"log"
@@ -44,6 +45,12 @@ func (a *Announcement) GetAllAnnouncements() (*[]dto.GetAllAnnouncementsOutputTo
 	rows, err := a.DB.Query(" select\n  a.id,\n  a.name,\n  a.description,\n  a.address,\n  a.postal_code,\n  u.name,\n  group_concat(image_url) as \"images\"\nfrom\n  users u,\n  announcement a,\n  announcement_images\nWHERE\n  a.user_id = u.id\n  AND a.id = announcement_images.announcement_id\n  GROUP BY\n  a.id,\n  a.name,  \n  a.description,\n  a.address,\n  a.postal_code,\n  u.name;")
 	if err != nil {
 		log.Printf("Error executing query: %s", err)
+		return nil, err
+	}
+
+	if !rows.Next() {
+		log.Printf("Error executing query: %s", err)
+		return nil, errors.New("no announcement found")
 	}
 
 	defer rows.Close()
@@ -76,6 +83,7 @@ func (a *Announcement) GetAnnouncementById(id string) (*dto.GetAllAnnouncementsO
 	var announcementsOutput dto.GetAllAnnouncementsOutput
 	if err := a.DB.QueryRow(query, id).Scan(&announcementsOutput.ID, &announcementsOutput.Name, &announcementsOutput.Description, &announcementsOutput.Address, &announcementsOutput.PostalCode, &announcementsOutput.User, &announcementsOutput.Images); err != nil {
 		log.Printf("Error executing query: %s", err)
+		return nil, err
 
 	}
 
