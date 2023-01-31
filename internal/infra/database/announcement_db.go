@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/dto"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
 	"log"
@@ -46,11 +45,6 @@ func (a *Announcement) GetAllAnnouncements() (*[]dto.GetAllAnnouncementsOutputTo
 	if err != nil {
 		log.Printf("Error executing query: %s", err)
 		return nil, err
-	}
-
-	if !rows.Next() {
-		log.Printf("Error executing query: %s", err)
-		return nil, errors.New("no announcement found")
 	}
 
 	defer rows.Close()
