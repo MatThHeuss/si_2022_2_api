@@ -22,6 +22,7 @@ type CreateUserOutput struct {
 type GetAllAnnouncementsOutput struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
+	Category    string `json:"category"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	PostalCode  string `json:"postal_code"`
@@ -32,6 +33,7 @@ type GetAllAnnouncementsOutput struct {
 type GetAllAnnouncementsOutputToUser struct {
 	ID          string   `json:"id"`
 	Name        string   `json:"name"`
+	Category    string   `json:"category"`
 	Description string   `json:"description"`
 	Address     string   `json:"address"`
 	PostalCode  string   `json:"postal_code"`

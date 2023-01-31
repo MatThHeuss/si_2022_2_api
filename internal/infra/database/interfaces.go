@@ -18,6 +18,7 @@ type AnnouncementInterface interface {
 	Create(announcement *entity.Announcement) error
 	GetAllAnnouncements() (*[]dto.GetAllAnnouncementsOutputToUser, error)
 	GetAnnouncementById(id string) (*dto.GetAllAnnouncementsOutputToUser, error)
+	GetAnnouncementByCategory(category string) (*[]dto.GetAllAnnouncementsOutputToUser, error)
 }
 
 type AnnouncementImagesInterface interface {

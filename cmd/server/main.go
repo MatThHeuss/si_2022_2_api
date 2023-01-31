@@ -65,6 +65,7 @@ func main() {
 	r.Post("/announcements", announcementHandler.CreateAnnouncement)
 	r.Get("/announcements", announcementHandler.GetAllAnnouncements)
 	r.Get("/announcements/{id}", announcementHandler.GetAnnouncementById)
+	r.Get("/announcements/category/{category}", announcementHandler.GetAnnouncementByCategory)
 	r.Post("/chat", chatHandler.Create)
 	r.Get("/chat", chatHandler.GetAllMessage)
 

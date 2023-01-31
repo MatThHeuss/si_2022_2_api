@@ -29,6 +29,7 @@ func (h *AnnouncementHandler) CreateAnnouncement(w http.ResponseWriter, r *http.
 	mForm := r.MultipartForm
 
 	name := mForm.Value["name"]
+	category := mForm.Value["category"]
 	description := mForm.Value["description"]
 	address := mForm.Value["address"]
 	postalCode := mForm.Value["postal_code"]
@@ -37,7 +38,7 @@ func (h *AnnouncementHandler) CreateAnnouncement(w http.ResponseWriter, r *http.
 		log.Printf("Error parsing id: %s", err)
 	}
 
-	announcement, err := entity.NewAnnouncement(name[0], description[0], address[0], postalCode[0], userId)
+	announcement, err := entity.NewAnnouncement(name[0], category[0], description[0], address[0], postalCode[0], userId)
 	if err != nil {
 		log.Printf("Error creating new announcement entity %s", err)
 	}
@@ -102,6 +103,32 @@ func (h *AnnouncementHandler) GetAnnouncementById(w http.ResponseWriter, r *http
 	w.Header().Set("Content-Type", "application/json")
 	id := chi.URLParam(r, "id")
 	announcements, err := h.AnnouncementDb.GetAnnouncementById(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		err := &errors.Errors{
+			Message:    "announcement not found",
+			StatusCode: http.StatusNotFound,
+		}
+		json.NewEncoder(w).Encode(err)
+		log.Printf("error loading  announcement: %s", err)
+		return
+	}
+
+	if announcements == nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode("announcement not found")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(announcements)
+}
+
+func (h *AnnouncementHandler) GetAnnouncementByCategory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	category := chi.URLParam(r, "category")
+	announcements, err := h.AnnouncementDb.GetAnnouncementByCategory(category)
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)

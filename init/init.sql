@@ -17,6 +17,7 @@ create table IF NOT EXISTS announcement_images (
 create table if not EXISTS announcement (
     id varchar(255) primary key not null,
     name varchar(255) not null,
+    category varchar(255) not null,
     description varchar(255) not null,
     address varchar(255) not null,
     postal_code varchar(255) not null,
