@@ -41,12 +41,12 @@ func (u *Chat) Create(chat *entity.Chat) error {
 func (u *Chat) GetAllMessages(sender, receiver string) (*[]entity.Chat, error) {
 	rows, err := u.DB.Query("select * from chat where (sender=? and receiver=?) or (receiver=? and sender=?)", sender, receiver, sender, receiver)
 	if err != nil {
-		log.Printf("Error im exec query: %s", err)
+		log.Printf("Error in exec query: %s", err.Error())
 		return nil, err
 	}
 
 	if !rows.Next() {
-		log.Printf("Error im exec query: %s", err)
+		log.Printf("no messages: %s", err.Error())
 		return nil, errors.New("no message found")
 	}
 

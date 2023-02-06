@@ -43,14 +43,11 @@ func (h *ChatHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *ChatHandler) GetAllMessage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var getAllMessagesDto dto.GetAllMessagesInput
-	err := json.NewDecoder(r.Body).Decode(&getAllMessagesDto)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
-	}
+	
+	senderId := r.URL.Query().Get("sender_id")
+	receiverId := r.URL.Query().Get("receiver_id")
 
-	chats, err := h.ChatDb.GetAllMessages(getAllMessagesDto.SenderID, getAllMessagesDto.ReceiverID)
+	chats, err := h.ChatDb.GetAllMessages(senderId, receiverId)
 
 	if err != nil {
 		err := errors.Errors{
