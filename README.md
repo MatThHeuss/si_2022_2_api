@@ -36,6 +36,7 @@ POST "http://localhost:8080/announcements
 curl --location --request POST 'http://localhost:8080/announcements' \
 --form 'name=" "' \
 --form 'description=" "' \
+--form 'category=" "' \
 --form 'address=" "' \
 --form 'postal_code=" "' \
 --form 'user_id=""' \
