@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/MatThHeuss/si_2020_2_api/internal/dto"
 	"github.com/MatThHeuss/si_2020_2_api/internal/entity"
 	"github.com/MatThHeuss/si_2020_2_api/internal/errors"
 	"github.com/MatThHeuss/si_2020_2_api/internal/infra/database"
@@ -23,15 +22,10 @@ func NewUserHandler(db database.UserInterface) *UserHandler {
 
 func (h *UserHandler) FindByEmail(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var userdto dto.CreateUserInput
-	err := json.NewDecoder(r.Body).Decode(&userdto)
-	if err != nil {
-		log.Printf("Error decoding user: %s", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(err.Error())
-	}
 
-	user, err := h.UserDb.FindByEmail(userdto.Email)
+	email := r.URL.Query().Get("email")
+
+	user, err := h.UserDb.FindByEmail(email)
 	if err != nil {
 		err := errors.Errors{
 			Message:    "User not found",
